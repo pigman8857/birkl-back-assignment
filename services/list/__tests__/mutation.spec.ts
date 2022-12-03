@@ -4,9 +4,7 @@ import { Context } from '../../../libs/context'
 const { fn } = jest
 
 describe('Test List service mutation', () => {
-  console.log('resolvers.Mutation ',resolvers.Mutation);
-
- 
+  console.log('resolvers.Mutation ', resolvers.Mutation)
 
   describe('Test createList', () => {
     const createResult: List = {
@@ -30,10 +28,9 @@ describe('Test List service mutation', () => {
       },
     }
 
-    const createList = resolvers.Mutation?.createList;
+    const createList = resolvers.Mutation?.createList
 
     it('can create list', async () => {
-  
       //@ts-ignore
       await expect(createList(_parent, { input }, context)).resolves.toEqual(
         createResult
@@ -49,33 +46,39 @@ describe('Test List service mutation', () => {
         include: { tasks: true },
       })
     })
-  });
+  })
 
   describe('Test updateTask', () => {
-
-    const updateTask = resolvers.Mutation?.updateTask;
-    const taskId = 1;
+    const updateTask = resolvers.Mutation?.updateTask
+    const taskId = 1
     const input = {
-      title : 'updatedFakeTitle',
-      status : 'updatedStatus'
+      title: 'updatedFakeTitle',
+      status: 'updatedStatus',
+    }
+    const updatedTask = {
+      id: taskId,
+      ...input,
+      list : {
+        id : 'fakeListId',
+        listName : 'fakeListName'
+      }
     }
     const context: Context = {
       prisma: {
-        list: {
+        task: {
           //@ts-ignore
-          update: fn(() => Promise.resolve()),
+          update: fn(() => Promise.resolve(updatedTask)),
         },
       },
     }
     const _parent = {}
     it('Can update task', async () => {
-      console.log('updateTask>',updateTask);
+      console.log('updateTask>', updateTask)
 
       //@ts-ignore
       await expect(updateTask(_parent, { input }, context)).resolves.toEqual({
         success: true,
       })
-    });
-
+    })
   })
-});
+})

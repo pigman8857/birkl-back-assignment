@@ -3,7 +3,6 @@ import { Context } from '../../../libs/context'
 
 export const mutation: Resolvers<Context>['Mutation'] = {
   createList: async (_parent, { input }, ctx) => {
-   
     const data = {
       listName: input.listName,
       tasks: {
@@ -13,13 +12,20 @@ export const mutation: Resolvers<Context>['Mutation'] = {
 
     const result = await ctx.prisma.list.create({
       data,
-      include: {tasks : true}
+      include: { tasks: true },
     })
-  
+
     return result
   },
-  updateTask: async (_parent, { taskId , input } , ctx) => {
-    console.log('updateTask() mutation taskId,input>',taskId,input);
-    return {success : false}
-  }
+  updateTask: async (_parent, { taskId, input }, ctx) => {
+    console.log('updateTask() mutation taskId,input>', taskId, input)
+    const { status, title } = input
+    const resukt = await ctx.prisma.task.update({
+      where: { id: taskId },
+      data: { status, title },
+      include: { list : true }
+    })
+    console.log('resukt',resukt);
+    return { success: false }
+  },
 }

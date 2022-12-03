@@ -7,7 +7,7 @@ export const query: Resolvers<Context>['Query'] = {
     ctx.prisma.list.findUnique({
       where: { id },
       include : {
-        tasks:true
+        tasks:true,
       }
     }),
 }

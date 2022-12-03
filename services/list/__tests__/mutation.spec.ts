@@ -4,7 +4,6 @@ import { Context } from '../../../libs/context'
 const { fn } = jest
 
 describe('Test List service mutation', () => {
-  console.log('resolvers.Mutation ', resolvers.Mutation)
 
   describe('Test createList', () => {
     const createResult: List = {
@@ -58,10 +57,10 @@ describe('Test List service mutation', () => {
     const updatedTask = {
       id: taskId,
       ...input,
-      list : {
-        id : 'fakeListId',
-        listName : 'fakeListName'
-      }
+      list: {
+        id: 'fakeListId',
+        listName: 'fakeListName',
+      },
     }
     const context: Context = {
       prisma: {
@@ -73,12 +72,16 @@ describe('Test List service mutation', () => {
     }
     const _parent = {}
     it('Can update task', async () => {
-      console.log('updateTask>', updateTask)
-
       //@ts-ignore
-      await expect(updateTask(_parent, { input }, context)).resolves.toEqual({
-        success: true,
-      })
+      await expect(updateTask(_parent, { taskId, input }, context)).resolves.toEqual(
+        updatedTask
+      )
+      expect(context.prisma.task.update).toBeCalledTimes(1);
+      expect(context.prisma.task.update).toBeCalledWith({
+        where: { id: taskId },
+        data: { ...input },
+        include: { list: true },
+      });
     })
   })
 })

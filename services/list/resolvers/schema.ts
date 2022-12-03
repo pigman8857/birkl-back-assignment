@@ -36,7 +36,10 @@ export const typeDefs = gql`
   }
 
   type UpdateResult {
-    success: Boolean!
+    id: Int!
+    title: String!
+    status: String!
+    list: List!
   }
 
   type Mutation {

@@ -10,22 +10,17 @@ export const mutation: Resolvers<Context>['Mutation'] = {
       },
     }
 
-    const result = await ctx.prisma.list.create({
+    return ctx.prisma.list.create({
       data,
       include: { tasks: true },
     })
-
-    return result
   },
   updateTask: async (_parent, { taskId, input }, ctx) => {
-    console.log('updateTask() mutation taskId,input>', taskId, input)
     const { status, title } = input
-    const resukt = await ctx.prisma.task.update({
+    return ctx.prisma.task.update({
       where: { id: taskId },
       data: { status, title },
-      include: { list : true }
+      include: { list: true },
     })
-    console.log('resukt',resukt);
-    return { success: false }
   },
 }

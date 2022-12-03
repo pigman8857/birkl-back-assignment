@@ -56,10 +56,15 @@ export const typeDefs = gql`
     deletedRole : Int!
   }
 
+  type DeleteListResult {
+    deletedRole : Int!
+  }
+
   type Mutation {
     createList(input: CreateListInput!): List!
     createTask(input: CreateTaskInput!): CreateTaskResult!
     updateTask(taskId: Int!, input: UpdateTaskInput!): UpdateTaskResult!
     deleteTask(taskId: Int!): DeleteTaskResult!
+    deleteList(listId: ID!): DeleteListResult!
   }
 `

@@ -3,7 +3,7 @@ import { Context } from '../../../libs/context'
 
 export const mutation: Resolvers<Context>['Mutation'] = {
   createList: async (_parent, { input }, ctx) => {
-    console.log('createList mutation input >', input)
+   
     const data = {
       listName: input.listName,
       tasks: {
@@ -12,9 +12,10 @@ export const mutation: Resolvers<Context>['Mutation'] = {
     }
 
     const result = await ctx.prisma.list.create({
-      data
+      data,
+      include: {tasks : true}
     })
-    console.log('createList mutation result >', result)
+  
     return result
   },
 }

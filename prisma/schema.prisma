@@ -14,15 +14,6 @@ model User {
 }
 
 model List {
-   id      Int  @id @default(autoincrement())
-   tasks   Task[]  
+   id      String  @id @default(uuid())
+   listName String
 }
-
-model Task {
-  id       Int  @id @default(autoincrement())
-  title    String
-  status   String
-  list     List    @relation(fields: [listId], references: [id])
-  listId   Int 
-}
-

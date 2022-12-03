@@ -2,30 +2,23 @@ import { gql } from 'apollo-server'
 
 export const typeDefs = gql`
   type List {
-    id: Int!
-    tasks: [Task]
-  }
-
-  type Task {
-    id: Int!
-    title: String!
-    status: String!
+    id: ID!
+    listName: String!
   }
 
   type Query {
-    list(id: Int!): List
+    list(id: ID!): List
   }
 
   input CreateListInput {
-    tasks: [CreateTaskInput!]!
+    listName: String!
   }
 
-  input CreateTaskInput {
-    title: String!
-    status: String!
+  type CreateResult {
+    success: Boolean!
   }
 
   type Mutation {
-    createList(input : CreateListInput!): List
+    createList(input: CreateListInput!): List!
   }
 `

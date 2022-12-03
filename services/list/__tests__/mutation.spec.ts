@@ -121,8 +121,8 @@ describe('Test List service mutation', () => {
   })
 
   describe('Test deleteTask', () => {
-    const expectingDeleteResult  = {
-      deletedRole : 1
+    const expectingDeleteResult = {
+      deletedRole: 1,
     }
     const context: Context = {
       prisma: {
@@ -141,11 +141,44 @@ describe('Test List service mutation', () => {
 
     it('can delete a task', async () => {
       //@ts-ignore
-      await expect(deleteTask(_parent,  input , context)).resolves.toEqual(
+      await expect(deleteTask(_parent, input, context)).resolves.toEqual(
         expectingDeleteResult
       )
       expect(context.prisma.task.delete).toBeCalledTimes(1)
-      expect(context.prisma.task.delete).toBeCalledWith({where : { id : input.taskId}})
+      expect(context.prisma.task.delete).toBeCalledWith({
+        where: { id: input.taskId },
+      })
+    })
+  })
+
+  describe('Test deleteList', () => {
+    const expectingDeleteResult = {
+      deletedRole: 1,
+    }
+    const context: Context = {
+      prisma: {
+        list: {
+          //@ts-ignore
+          delete: fn(() => Promise.resolve(undefined)),
+        },
+      },
+    }
+    const _parent = {}
+    const input = {
+      listId: 'fakeListId',
+    }
+
+    const deleteList = resolvers.Mutation?.deleteList
+
+    it('can delete a list', async () => {
+      //@ts-ignore
+      await expect(deleteList(_parent, input, context)).resolves.toEqual(
+        expectingDeleteResult
+      )
+      expect(context.prisma.list.delete).toBeCalledTimes(1)
+      expect(context.prisma.list.delete).toBeCalledWith({
+        where: { id: input.listId },
+      })
     })
   })
 })

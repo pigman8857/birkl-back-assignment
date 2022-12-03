@@ -15,4 +15,17 @@ export const typeDefs = gql`
   type Query {
     list(id: Int!): List
   }
+
+  input CreateListInput {
+    tasks: [CreateTaskInput!]!
+  }
+
+  input CreateTaskInput {
+    title: String!
+    status: String!
+  }
+
+  type Mutation {
+    createList(input : CreateListInput!): List
+  }
 `

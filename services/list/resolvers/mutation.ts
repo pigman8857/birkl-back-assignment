@@ -30,4 +30,8 @@ export const mutation: Resolvers<Context>['Mutation'] = {
       include: { list: true },
     })
   },
+  deleteTask: async (_parent, { taskId }, ctx) => {
+    await ctx.prisma.task.delete({where : { id : taskId}});
+    return { deletedRole : 1}
+  },
 }

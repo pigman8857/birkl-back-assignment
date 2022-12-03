@@ -119,4 +119,33 @@ describe('Test List service mutation', () => {
       })
     })
   })
+
+  describe('Test deleteTask', () => {
+    const expectingDeleteResult  = {
+      deletedRole : 1
+    }
+    const context: Context = {
+      prisma: {
+        task: {
+          //@ts-ignore
+          delete: fn(() => Promise.resolve(undefined)),
+        },
+      },
+    }
+    const _parent = {}
+    const input = {
+      taskId: 1,
+    }
+
+    const deleteTask = resolvers.Mutation?.deleteTask
+
+    it('can delete a task', async () => {
+      //@ts-ignore
+      await expect(deleteTask(_parent,  input , context)).resolves.toEqual(
+        expectingDeleteResult
+      )
+      expect(context.prisma.task.delete).toBeCalledTimes(1)
+      expect(context.prisma.task.delete).toBeCalledWith({where : { id : input.taskId}})
+    })
+  })
 })

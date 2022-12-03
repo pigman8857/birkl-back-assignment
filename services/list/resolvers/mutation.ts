@@ -1,5 +1,4 @@
 import { Resolvers } from 'generated/types'
-import { Prisma } from '@prisma/client'
 import { Context } from '../../../libs/context'
 
 export const mutation: Resolvers<Context>['Mutation'] = {

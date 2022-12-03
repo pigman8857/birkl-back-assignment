@@ -18,4 +18,8 @@ export const mutation: Resolvers<Context>['Mutation'] = {
   
     return result
   },
+  updateTask: async (_parent, { taskId , input } , ctx) => {
+    console.log('updateTask() mutation taskId,input>',taskId,input);
+    return {success : false}
+  }
 }

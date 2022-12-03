@@ -30,12 +30,17 @@ export const typeDefs = gql`
     tasks: [CreateTaskInput!]!
   }
 
-  type CreateResult {
+  input UpdateTaskInput {
+    title: String!
+    status: String!
+  }
+
+  type UpdateResult {
     success: Boolean!
   }
 
   type Mutation {
     createList(input: CreateListInput!): List!
-
+    updateTask(taskId: ID!,input: UpdateTaskInput!): UpdateResult!
   }
 `

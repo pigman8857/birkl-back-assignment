@@ -15,6 +15,7 @@ export const typeDefs = gql`
   }
 
   type Query {
+    lists: [List!]!
     list(id: ID!): List
   }
 

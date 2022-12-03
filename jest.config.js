@@ -16,6 +16,8 @@ module.exports = {
       '!**/node_modules/**',
       '!**/__tests__/**',
       '!**/__mocks__/**',
+      '!services/**/schema.ts',
+      '!services/**/index.ts',
     ],
     coverageThreshold: {
       global: {

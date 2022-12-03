@@ -1,6 +1,14 @@
 -- CreateTable
-CREATE TABLE "Task" (
+CREATE TABLE "List" (
     "id" TEXT NOT NULL,
+    "listName" TEXT NOT NULL,
+
+    CONSTRAINT "List_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Task" (
+    "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "status" TEXT NOT NULL,
     "listId" TEXT NOT NULL,

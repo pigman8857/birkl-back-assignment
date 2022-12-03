@@ -12,8 +12,7 @@ export const mutation: Resolvers<Context>['Mutation'] = {
     }
 
     const result = await ctx.prisma.list.create({
-      data,
-      include: { tasks: true },
+      data
     })
     console.log('createList mutation result >', result)
     return result

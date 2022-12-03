@@ -13,6 +13,7 @@ describe('Test List service query', () => {
       tasks: [
         //@ts-ignore
         {
+          id : 1,
           title: 'fakeTitle1',
           status: 'fakeStatus',
         },
@@ -24,6 +25,7 @@ describe('Test List service query', () => {
         tasks: [
           //@ts-ignore
           {
+            id: 2,
             title: 'fakeTitle1',
             status: 'fakeStatus',
           },
@@ -36,6 +38,7 @@ describe('Test List service query', () => {
     listName: 'fakeListName1',
     tasks: [
       {
+        id: 1,
         title: 'fakeTitle1',
         status: 'fakeStatus1',
       },

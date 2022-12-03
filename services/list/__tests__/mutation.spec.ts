@@ -37,8 +37,7 @@ describe('Test List service mutation', () => {
         tasks: {
           create: input.tasks,
         },
-      },
-      include: { tasks: true },
+      }
     })
   })
 })

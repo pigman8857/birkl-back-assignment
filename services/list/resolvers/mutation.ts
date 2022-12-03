@@ -23,4 +23,11 @@ export const mutation: Resolvers<Context>['Mutation'] = {
       include: { list: true },
     })
   },
+  createTask: async (_parent, { input }, ctx) => {
+    const { listId, title } = input
+    return ctx.prisma.task.create({
+      data: { title, listId, status: 'to-do' },
+      include: { list: true },
+    })
+  },
 }

@@ -48,10 +48,7 @@ export const mutation: Resolvers<Context>['Mutation'] = {
         where: { id: task.id },
       })
     })
-
-    const trxResult = await ctx.prisma.$transaction(chaNgeTasksPositionOps)
-    console.log('trxResult >',trxResult);
-    return { deletedRole: 1 }
+    return ctx.prisma.$transaction(chaNgeTasksPositionOps)
   },
   deleteList: async (_parent, { listId }, ctx) => {
     await ctx.prisma.list.delete({

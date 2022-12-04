@@ -55,7 +55,10 @@ export const typeDefs = gql`
   }
 
   type DeleteTaskResult {
-    deletedRole : Int!
+    id: Int!
+    title: String!
+    status: String!
+    position: Int!
   }
 
   type DeleteListResult {
@@ -66,7 +69,7 @@ export const typeDefs = gql`
     createList(input: CreateListInput!): List!
     createTask(input: CreateTaskInput!): CreateTaskResult!
     updateTask(taskId: Int!, input: UpdateTaskInput!): UpdateTaskResult!
-    deleteTask(taskId: Int!, listId: ID!): DeleteTaskResult!
+    deleteTask(taskId: Int!, listId: ID!): [DeleteTaskResult]!
     deleteList(listId: ID!): DeleteListResult!
   }
 `

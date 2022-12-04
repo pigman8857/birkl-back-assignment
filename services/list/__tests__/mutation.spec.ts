@@ -86,13 +86,13 @@ describe('Test List service mutation', () => {
 
   describe('Test createTask', () => {
     const createResult = {
-      id : 1,
+      id: 1,
       status: 'to-do',
       title: 'fakeTitle',
       list: {
-        listName: "fakeListName"
+        listName: 'fakeListName',
       },
-      position: 0
+      position: 0,
     }
     const context: Context = {
       prisma: {
@@ -113,7 +113,7 @@ describe('Test List service mutation', () => {
 
     const createCallWith = {
       ...input,
-      position : 0
+      position: 0,
     }
 
     const createTask = resolvers.Mutation?.createTask
@@ -129,21 +129,29 @@ describe('Test List service mutation', () => {
         data: createCallWith,
         include: { list: true },
       })
-      expect(context.prisma.task.count).toBeCalledWith({where :{ listId:'fakeListId' }})
+      expect(context.prisma.task.count).toBeCalledWith({
+        where: { listId: 'fakeListId' },
+      })
     })
   })
 
   describe('Test deleteTask', () => {
-    const expectingDeleteResult = {
-      deletedRole: 1,
-    }
+    const expectingDeleteResult = [
+      {
+        id: 2,
+        listId: 'fakeListId',
+        position: 0,
+        status: 'in progress',
+        title: 'title@#2',
+      },
+    ]
     const deletingTransactionResult = [
       {
         id: 1,
         title: 'title@#1',
         status: 'in progress',
         listId: 'fakeListId',
-        position: 0
+        position: 0,
       },
       [
         {
@@ -151,9 +159,9 @@ describe('Test List service mutation', () => {
           title: 'title@#2',
           status: 'in progress',
           listId: 'fakeListId',
-          position: 1
+          position: 1,
         },
-      ]
+      ],
     ]
     const context: Context = {
       prisma: {
@@ -168,18 +176,17 @@ describe('Test List service mutation', () => {
         //@ts-ignore
         $transaction: fn(),
       },
-
     }
     const _parent = {}
     const input = {
       taskId: 1,
-      listId: 'fakeListId'
+      listId: 'fakeListId',
     }
 
     const deleteTask = resolvers.Mutation?.deleteTask
 
     beforeAll(() => {
-      spyOn(context.prisma,'$transaction')
+      spyOn(context.prisma, '$transaction')
         .mockResolvedValueOnce(deletingTransactionResult)
         .mockResolvedValueOnce([
           {
@@ -187,11 +194,11 @@ describe('Test List service mutation', () => {
             title: 'title@#2',
             status: 'in progress',
             listId: 'fakeListId',
-            position: 0
+            position: 0,
           },
         ])
     })
-    
+
     it('can delete a task', async () => {
       //@ts-ignore
       await expect(deleteTask(_parent, input, context)).resolves.toEqual(
@@ -203,12 +210,17 @@ describe('Test List service mutation', () => {
       })
       expect(context.prisma.task.findMany).toBeCalledTimes(1)
       expect(context.prisma.task.findMany).toBeCalledWith({
-        where: { listId : input.listId },
+        where: { listId: input.listId },
         orderBy: { position: 'asc' },
-      });
+      })
       expect(context.prisma.$transaction).toBeCalledTimes(2)
-      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(1,[undefined,undefined]);
-      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(2,[undefined]);
+      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(1, [
+        undefined,
+        undefined,
+      ])
+      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(2, [
+        undefined,
+      ])
     })
   })
 

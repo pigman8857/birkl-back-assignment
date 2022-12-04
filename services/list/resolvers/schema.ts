@@ -21,7 +21,7 @@ export const typeDefs = gql`
 
   input CreateListTaskInput {
     title: String!
-    status: String!
+    status: GqlTaskStatus!
   }
 
   input CreateListInput {

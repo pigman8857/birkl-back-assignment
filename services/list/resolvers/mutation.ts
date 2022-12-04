@@ -23,6 +23,9 @@ export const mutation: Resolvers<Context>['Mutation'] = {
           create : positionedTask
         }
       },
+      include: {
+        tasks : true
+      }
     })
   },
   updateTask: async (_parent, { taskId, input }, ctx) => {

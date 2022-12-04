@@ -52,7 +52,7 @@ describe('Test List service mutation', () => {
             create: expectingTaskCreate,
           },
         },
-        //include: { tasks: true },
+        include: { tasks: true },
       })
     })
   })

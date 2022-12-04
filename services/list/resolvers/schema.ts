@@ -21,7 +21,7 @@ export const typeDefs = gql`
 
   input CreateListTaskInput {
     title: String!
-    status: GqlTaskStatus!
+    status: Statuses!
   }
 
   input CreateListInput {
@@ -31,7 +31,7 @@ export const typeDefs = gql`
 
   input UpdateTaskInput {
     title: String!
-    status: GqlTaskStatus
+    status: Statuses
   }
 
   input CreateTaskInput {
@@ -65,7 +65,7 @@ export const typeDefs = gql`
     deletedRole : Int!
   }
 
-  enum GqlTaskStatus {
+  enum Statuses {
     IN_PROGRESS
     TO_DO
     COMPLETED

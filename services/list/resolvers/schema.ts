@@ -71,5 +71,6 @@ export const typeDefs = gql`
     updateTask(taskId: Int!, input: UpdateTaskInput!): UpdateTaskResult!
     deleteTask(taskId: Int!, listId: ID!): [DeleteTaskResult]!
     deleteList(listId: ID!): DeleteListResult!
+    changeTaskPosition(taskId: Int!,newPosition: Int!,listId: ID!): [Task]!
   }
 `

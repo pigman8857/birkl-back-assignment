@@ -80,9 +80,9 @@ export const mutation: Resolvers<Context>['Mutation'] = {
       throw new Error(`Entry with task Id ${taskId} does not exist`);
 
     const originalPosition = taskToReposition!.position
-    let newTasks: Task[] = getReposionedTasks(taskId,taskToReposition!,tasks,newPosition,originalPosition);
+    let newPositionTasks: Task[] = getReposionedTasks(taskId,taskToReposition!,tasks,newPosition,originalPosition);
     
-    const repositionOps = newTasks.map(task => {
+    const repositionOps = newPositionTasks.map(task => {
       const { id, status, title, position } = task as {
         id: number
         status: string

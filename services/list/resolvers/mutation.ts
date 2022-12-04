@@ -25,15 +25,32 @@ export const mutation: Resolvers<Context>['Mutation'] = {
   },
   createTask: async (_parent, { input }, ctx) => {
     const { listId, title } = input
-    
-    const count = await ctx.prisma.task.count({where :{ listId }});
+
+    const count = await ctx.prisma.task.count({ where: { listId } })
     return ctx.prisma.task.create({
-      data: { title, listId, status: 'to-do', position: count},
+      data: { title, listId, status: 'to-do', position: count },
       include: { list: true },
     })
   },
-  deleteTask: async (_parent, { taskId }, ctx) => {
-    await ctx.prisma.task.delete({ where: { id: taskId } })
+  deleteTask: async (_parent, { taskId, listId }, ctx) => {
+
+    const [deletedTask,remainingTasks] = await ctx.prisma.$transaction([
+      ctx.prisma.task.delete({ where: { id: taskId } }),
+      ctx.prisma.task.findMany({
+        where: { listId },
+        orderBy: { position: 'asc' },
+      }),
+    ])
+    let position = 0
+    const chaNgeTasksPositionOps = remainingTasks.map(task => {
+      return ctx.prisma.task.update({
+        data: { position: position++ },
+        where: { id: task.id },
+      })
+    })
+
+    const trxResult = await ctx.prisma.$transaction(chaNgeTasksPositionOps)
+    console.log('trxResult >',trxResult);
     return { deletedRole: 1 }
   },
   deleteList: async (_parent, { listId }, ctx) => {

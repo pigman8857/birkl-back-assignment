@@ -66,7 +66,7 @@ export const typeDefs = gql`
     createList(input: CreateListInput!): List!
     createTask(input: CreateTaskInput!): CreateTaskResult!
     updateTask(taskId: Int!, input: UpdateTaskInput!): UpdateTaskResult!
-    deleteTask(taskId: Int!): DeleteTaskResult!
+    deleteTask(taskId: Int!, listId: ID!): DeleteTaskResult!
     deleteList(listId: ID!): DeleteListResult!
   }
 `

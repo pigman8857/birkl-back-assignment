@@ -1,7 +1,7 @@
 import { List, Task } from 'generated/types'
 import { resolvers } from '../resolvers/index'
 import { Context } from '../../../libs/context'
-const { fn } = jest
+const { fn, spyOn } = jest
 
 describe('Test List service mutation', () => {
   describe('Test createList', () => {
@@ -137,21 +137,61 @@ describe('Test List service mutation', () => {
     const expectingDeleteResult = {
       deletedRole: 1,
     }
+    const deletingTransactionResult = [
+      {
+        id: 1,
+        title: 'title@#1',
+        status: 'in progress',
+        listId: 'fakeListId',
+        position: 0
+      },
+      [
+        {
+          id: 2,
+          title: 'title@#2',
+          status: 'in progress',
+          listId: 'fakeListId',
+          position: 1
+        },
+      ]
+    ]
     const context: Context = {
       prisma: {
         task: {
           //@ts-ignore
-          delete: fn(() => Promise.resolve(undefined)),
+          delete: fn(() => undefined),
+          //@ts-ignore
+          findMany: fn(() => undefined),
+          //@ts-ignore
+          update: fn(() => undefined),
         },
+        //@ts-ignore
+        $transaction: fn(),
       },
+
     }
     const _parent = {}
     const input = {
       taskId: 1,
+      listId: 'fakeListId'
     }
 
     const deleteTask = resolvers.Mutation?.deleteTask
 
+    beforeAll(() => {
+      spyOn(context.prisma,'$transaction')
+        .mockResolvedValueOnce(deletingTransactionResult)
+        .mockResolvedValueOnce([
+          {
+            id: 2,
+            title: 'title@#2',
+            status: 'in progress',
+            listId: 'fakeListId',
+            position: 0
+          },
+        ])
+    })
+    
     it('can delete a task', async () => {
       //@ts-ignore
       await expect(deleteTask(_parent, input, context)).resolves.toEqual(
@@ -161,6 +201,14 @@ describe('Test List service mutation', () => {
       expect(context.prisma.task.delete).toBeCalledWith({
         where: { id: input.taskId },
       })
+      expect(context.prisma.task.findMany).toBeCalledTimes(1)
+      expect(context.prisma.task.findMany).toBeCalledWith({
+        where: { listId : input.listId },
+        orderBy: { position: 'asc' },
+      });
+      expect(context.prisma.$transaction).toBeCalledTimes(2)
+      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(1,[undefined,undefined]);
+      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(2,[undefined]);
     })
   })
 

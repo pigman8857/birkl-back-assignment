@@ -19,14 +19,14 @@ export const typeDefs = gql`
     list(id: ID!): List
   }
 
-  input CreateTaskInput {
+  input CreateListTaskInput {
     title: String!
     status: String!
   }
 
   input CreateListInput {
     listName: String!
-    tasks: [CreateTaskInput!]!
+    tasks: [CreateListTaskInput!]!
   }
 
   input UpdateTaskInput {

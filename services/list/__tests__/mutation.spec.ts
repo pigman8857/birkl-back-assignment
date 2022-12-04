@@ -20,11 +20,19 @@ describe('Test List service mutation', () => {
     const _parent = {}
     const input = {
       listName: 'fakeListName',
-      tasks: {
+      tasks: [{
         title: 'fakeTitle',
         status: 'fakeStatus',
-      },
+      }],
     }
+
+    const expectingTaskCreate = [
+      {
+        title: 'fakeTitle',
+        status: 'fakeStatus',
+        position : 0
+      }
+    ]
 
     const createList = resolvers.Mutation?.createList
 
@@ -38,7 +46,7 @@ describe('Test List service mutation', () => {
         data: {
           listName: input.listName,
           tasks: {
-            create: input.tasks,
+            create: expectingTaskCreate,
           },
         },
         include: { tasks: true },

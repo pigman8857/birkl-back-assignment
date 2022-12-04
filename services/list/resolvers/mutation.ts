@@ -3,10 +3,18 @@ import { Context } from '../../../libs/context'
 
 export const mutation: Resolvers<Context>['Mutation'] = {
   createList: async (_parent, { input }, ctx) => {
+    let position = 0;
+    const positionedTask = input.tasks.map((task) => {
+      return {
+        ...task,
+        position : position++
+      }
+    },[])
+
     const data = {
       listName: input.listName,
       tasks: {
-        create: input.tasks,
+        create: positionedTask,
       },
     }
 

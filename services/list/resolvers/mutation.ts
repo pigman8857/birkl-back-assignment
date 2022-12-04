@@ -5,20 +5,24 @@ import { TaskStatus } from '@prisma/client'
 
 export const mutation: Resolvers<Context>['Mutation'] = {
   createList: async (_parent, { input }, ctx) => {
-    // let position = 0
-    // const positionedTask = input.tasks.map(task => {
-    //   return {
-    //     ...task,
-    //     position: position++,
-    //   }
-    // }, [])
-
-    // const data = {
-    //   listName: input.listName,
-    // }
+    let position = 0
+    const positionedTask = input.tasks.map(task => {
+      const __status : TaskStatus = task.status as TaskStatus;
+      console.log('__status');
+      return {
+        ...task,
+        status:__status,
+        position: position++,
+      }
+    }, [])
 
     return ctx.prisma.list.create({
-      data: input,
+      data : {
+        listName: input.listName,
+        tasks : {
+          create : positionedTask
+        }
+      },
     })
   },
   updateTask: async (_parent, { taskId, input }, ctx) => {

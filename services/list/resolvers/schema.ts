@@ -31,7 +31,7 @@ export const typeDefs = gql`
 
   input UpdateTaskInput {
     title: String!
-    status: String!
+    status: GqlTaskStatus
   }
 
   input CreateTaskInput {
@@ -65,7 +65,7 @@ export const typeDefs = gql`
     deletedRole : Int!
   }
 
-  enum Status {
+  enum GqlTaskStatus {
     IN_PROGRESS
     TO_DO
     COMPLETED

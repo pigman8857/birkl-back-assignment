@@ -1,4 +1,4 @@
-import { List, Task } from 'generated/types'
+import { List } from 'generated/types'
 import { resolvers } from '../resolvers/index'
 import { Context } from '../../../libs/context'
 import * as Helper from '../resolvers/helper'
@@ -21,18 +21,18 @@ describe('Test List service mutation', () => {
     const _parent = {}
     const input = {
       listName: 'fakeListName',
-      // tasks: [
-      //   {
-      //     title: 'fakeTitle',
-      //     status: 'fakeStatus',
-      //   },
-      // ],
+      tasks: [
+        {
+          title: 'fakeTitle',
+          status: 'TO_DO',
+        },
+      ],
     }
 
     const expectingTaskCreate = [
       {
         title: 'fakeTitle',
-        // status: 'fakeStatus',
+        status: 'TO_DO',
         position: 0,
       },
     ]
@@ -48,9 +48,9 @@ describe('Test List service mutation', () => {
       expect(context.prisma.list.create).toBeCalledWith({
         data: {
           listName: input.listName,
-          // tasks: {
-          //   create: expectingTaskCreate,
-          // },
+          tasks: {
+            create: expectingTaskCreate,
+          },
         },
         //include: { tasks: true },
       })

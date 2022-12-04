@@ -8,7 +8,7 @@ export const mutation: Resolvers<Context>['Mutation'] = {
     let position = 0
     const positionedTask = input.tasks.map(task => {
       const __status : TaskStatus = task.status as TaskStatus;
-      console.log('__status');
+   
       return {
         ...task,
         status:__status,

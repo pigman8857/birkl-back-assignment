@@ -9,15 +9,12 @@ module.exports = {
     collectCoverage: true,
     collectCoverageFrom: [
       'services/**/*.ts',
-      // '!services/config.ts',
-      // '!services/create-server.ts',
-      // '!services/server.ts',
-      // '!services/version.ts',
       '!**/node_modules/**',
       '!**/__tests__/**',
       '!**/__mocks__/**',
       '!services/**/schema.ts',
       '!services/**/index.ts',
+      '!services/user/**',
     ],
     coverageThreshold: {
       global: {
@@ -27,6 +24,5 @@ module.exports = {
         statements: 80,
       },
     },
-    // setupFiles: ['<rootDir>/test-setup.js'],
   };
   

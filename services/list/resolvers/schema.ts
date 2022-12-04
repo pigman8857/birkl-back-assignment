@@ -65,6 +65,13 @@ export const typeDefs = gql`
     deletedRole : Int!
   }
 
+  enum Status {
+    IN_PROGRESS
+    TO_DO
+    COMPLETED
+    REJECTED
+  }
+
   type Mutation {
     createList(input: CreateListInput!): List!
     createTask(input: CreateTaskInput!): CreateTaskResult!

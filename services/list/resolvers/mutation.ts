@@ -1,5 +1,6 @@
 import { Resolvers, Task } from 'generated/types'
 import { Context } from '../../../libs/context'
+import { getReposionedTasks} from './helper'
 
 export const mutation: Resolvers<Context>['Mutation'] = {
   createList: async (_parent, { input }, ctx) => {
@@ -74,30 +75,13 @@ export const mutation: Resolvers<Context>['Mutation'] = {
         orderBy: { position: 'asc' },
       }),
     ])
+ 
+    if(!taskToReposition)
+      throw new Error(`Entry with task Id ${taskId} does not exist`);
 
     const originalPosition = taskToReposition!.position
-    let newTasks: Task[] = []
-    if (newPosition >= originalPosition) {
-      //Shift right
-      const shiftLeftTasks = tasks.filter(
-        task => task.position <= newPosition && task.id != taskId
-      )
-      const shiftRightTasks = tasks.filter(task => task.position > newPosition)
-      newTasks = [...shiftLeftTasks, taskToReposition!, ...shiftRightTasks]
-
-      let newPos = 0
-      newTasks.forEach(task => (task!.position = newPos++))
-
-    } else if (newPosition < originalPosition) {
-      //Shift Left
-      const shiftLeftTasks = tasks.filter(task => task.position < newPosition)
-      const shiftRightTasks = tasks.filter(
-        task => task.position >= newPosition && task.id != taskId
-      )
-      newTasks = [...shiftLeftTasks, taskToReposition!, ...shiftRightTasks]
-      let newPos = 0
-      newTasks.forEach(task => (task!.position = newPos++))
-    }
+    let newTasks: Task[] = getReposionedTasks(taskId,taskToReposition!,tasks,newPosition,originalPosition);
+    
     const repositionOps = newTasks.map(task => {
       const { id, status, title, position } = task as {
         id: number
@@ -106,8 +90,8 @@ export const mutation: Resolvers<Context>['Mutation'] = {
         position: number
       }
       return ctx.prisma.task.update({
-        data: { id, status, title, position },
-        where: { id: task.id },
+        data: { status, title, position },
+        where: { id },
       })
     }, [])
     

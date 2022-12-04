@@ -1,7 +1,8 @@
 import { List, Task } from 'generated/types'
 import { resolvers } from '../resolvers/index'
 import { Context } from '../../../libs/context'
-const { fn, spyOn } = jest
+import * as Helper from '../resolvers/helper'
+const { fn, spyOn, clearAllMocks} = jest
 
 describe('Test List service mutation', () => {
   describe('Test createList', () => {
@@ -20,18 +21,20 @@ describe('Test List service mutation', () => {
     const _parent = {}
     const input = {
       listName: 'fakeListName',
-      tasks: [{
-        title: 'fakeTitle',
-        status: 'fakeStatus',
-      }],
+      tasks: [
+        {
+          title: 'fakeTitle',
+          status: 'fakeStatus',
+        },
+      ],
     }
 
     const expectingTaskCreate = [
       {
         title: 'fakeTitle',
         status: 'fakeStatus',
-        position : 0
-      }
+        position: 0,
+      },
     ]
 
     const createList = resolvers.Mutation?.createList
@@ -260,6 +263,202 @@ describe('Test List service mutation', () => {
       expect(context.prisma.list.delete).toBeCalledWith({
         where: { id: input.listId },
       })
+    })
+  })
+
+  describe('test changeTaskPosition', () => {
+    const findManyTasks = [
+      {
+        id: 1,
+        title: 'fakeTitle1',
+        status: 'in-progress',
+        position: 0,
+      },
+      {
+        id: 2,
+        title: 'fakeTitle2',
+        status: 'in-progress',
+        position: 1,
+      },
+      {
+        id: 3,
+        title: 'fakeTitle3',
+        status: 'in-progress',
+        position: 2,
+      },
+      {
+        id: 4,
+        title: 'fakeTitle4',
+        status: 'in-progress',
+        position: 3,
+      },
+      {
+        id: 5,
+        title: 'fakeTitle5',
+        status: 'in-progress',
+        position: 4,
+      },
+    ]
+    const context: Context = {
+      prisma: {
+        task: {
+          //@ts-ignore
+          findUnique: fn(() => undefined),
+          //@ts-ignore
+          findMany: fn(() => undefined),
+          //@ts-ignore
+          update: fn(() => undefined),
+        },
+        //@ts-ignore
+        $transaction: fn(),
+      },
+    }
+    const _parent = {}
+
+    const changeTaskPosition = resolvers.Mutation?.changeTaskPosition
+
+    afterAll(() => {
+      clearAllMocks();
+    })
+
+    it('Can change position and update', async () => {
+      const repositionedTasks = [
+        {
+          id: 1,
+          title: 'fakeTitle1',
+          status: 'in-progress',
+          position: 0,
+        },
+        {
+          id: 3,
+          title: 'fakeTitle3',
+          status: 'in-progress',
+          position: 1,
+        },
+        {
+          id: 2,
+          title: 'fakeTitle2',
+          status: 'in-progress',
+          position: 2,
+        },
+        {
+          id: 4,
+          title: 'fakeTitle4',
+          status: 'in-progress',
+          position: 3,
+        },
+        {
+          id: 5,
+          title: 'fakeTitle5',
+          status: 'in-progress',
+          position: 4,
+        },
+      ]
+      spyOn(Helper, 'getReposionedTasks').mockReturnValueOnce(repositionedTasks)
+      spyOn(context.prisma, '$transaction')
+        .mockResolvedValueOnce([
+          {
+            id: 2,
+            title: 'fakeTitle3',
+            status: 'in-progress',
+            position: 1,
+          },
+          findManyTasks,
+        ])
+        .mockResolvedValueOnce([{}, {}, {}, {}, {}, repositionedTasks])
+
+      const input = {
+        newPosition: 3,
+        taskId: 2,
+        listId: 'fakeListId',
+      }
+      await expect(
+        //@ts-ignore
+        changeTaskPosition(_parent, input, context)
+      ).resolves.toEqual(repositionedTasks)
+
+      expect(context.prisma.task.findUnique).toHaveBeenCalledTimes(1)
+      expect(context.prisma.task.findUnique).toBeCalledWith({
+        where: {
+          id: input.taskId,
+        },
+      })
+      expect(context.prisma.task.findMany).toHaveBeenCalledTimes(2)
+      expect(context.prisma.task.findMany).toHaveBeenNthCalledWith(1, {
+        where: {
+          listId: input.listId,
+        },
+        orderBy: { position: 'asc' },
+      })
+      expect(context.prisma.task.findMany).toHaveBeenNthCalledWith(2, {
+        where: {
+          listId: input.listId,
+        },
+        orderBy: { position: 'asc' },
+      })
+
+      expect(context.prisma.task.update).toHaveBeenCalledTimes(5)
+      expect(context.prisma.task.update).toHaveBeenNthCalledWith(1, {
+        data: {
+          title: 'fakeTitle1',
+          status: 'in-progress',
+          position: 0,
+        },
+        where: { id: 1 },
+      })
+      expect(context.prisma.task.update).toHaveBeenNthCalledWith(2, {
+        data: {
+          title: 'fakeTitle3',
+          status: 'in-progress',
+          position: 1,
+        },
+        where: { id: 3 },
+      })
+      expect(context.prisma.task.update).toHaveBeenNthCalledWith(3, {
+        data: {
+          title: 'fakeTitle2',
+          status: 'in-progress',
+          position: 2,
+        },
+        where: { id: 2 },
+      })
+      expect(context.prisma.task.update).toHaveBeenNthCalledWith(4, {
+        data: {
+          title: 'fakeTitle4',
+          status: 'in-progress',
+          position: 3,
+        },
+        where: { id: 4 },
+      })
+      expect(context.prisma.task.update).toHaveBeenNthCalledWith(5, {
+        data: {
+          title: 'fakeTitle5',
+          status: 'in-progress',
+          position: 4,
+        },
+        where: { id: 5 },
+      })
+
+      expect(context.prisma.$transaction).toHaveBeenCalledTimes(2);
+      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(1,[undefined,undefined]);
+      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(2,[undefined,undefined,undefined,undefined,undefined,undefined]);
+    })
+
+    it('Can change task id = 2 to new position 3', async () => {
+      const input = {
+        newPosition: 3,
+        taskId: 2,
+        listId: 'fakeListId',
+      }
+      spyOn(context.prisma, '$transaction')
+      .mockResolvedValueOnce([
+        undefined,
+        findManyTasks,
+      ])
+      await expect(
+        //@ts-ignore
+        changeTaskPosition(_parent, input, context)
+      ).rejects.toThrow(new Error("Entry with task Id 2 does not exist"))
     })
   })
 })

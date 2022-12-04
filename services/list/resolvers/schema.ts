@@ -5,6 +5,7 @@ export const typeDefs = gql`
     id: Int!
     title: String!
     status: String!
+    position: Int
   }
 
   type List {

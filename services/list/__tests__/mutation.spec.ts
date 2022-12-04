@@ -85,16 +85,22 @@ describe('Test List service mutation', () => {
   })
 
   describe('Test createTask', () => {
-    const createResult: Task = {
-      id: 1,
+    const createResult = {
+      id : 1,
       status: 'to-do',
       title: 'fakeTitle',
+      list: {
+        listName: "fakeListName"
+      },
+      position: 0
     }
     const context: Context = {
       prisma: {
         task: {
           //@ts-ignore
           create: fn(() => Promise.resolve(createResult)),
+          //@ts-ignore
+          count: fn(() => Promise.resolve(0)),
         },
       },
     }
@@ -105,6 +111,11 @@ describe('Test List service mutation', () => {
       listId: 'fakeListId',
     }
 
+    const createCallWith = {
+      ...input,
+      position : 0
+    }
+
     const createTask = resolvers.Mutation?.createTask
 
     it('can create task', async () => {
@@ -113,10 +124,12 @@ describe('Test List service mutation', () => {
         createResult
       )
       expect(context.prisma.task.create).toBeCalledTimes(1)
+      expect(context.prisma.task.count).toBeCalledTimes(1)
       expect(context.prisma.task.create).toBeCalledWith({
-        data: input,
+        data: createCallWith,
         include: { list: true },
       })
+      expect(context.prisma.task.count).toBeCalledWith({where :{ listId:'fakeListId' }})
     })
   })
 

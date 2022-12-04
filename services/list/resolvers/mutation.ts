@@ -25,8 +25,10 @@ export const mutation: Resolvers<Context>['Mutation'] = {
   },
   createTask: async (_parent, { input }, ctx) => {
     const { listId, title } = input
+    
+    const count = await ctx.prisma.task.count({where :{ listId }});
     return ctx.prisma.task.create({
-      data: { title, listId, status: 'to-do' },
+      data: { title, listId, status: 'to-do', position: count},
       include: { list: true },
     })
   },

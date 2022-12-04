@@ -51,6 +51,7 @@ export const typeDefs = gql`
     title: String!
     status: String!
     list: List!
+    position: Int!
   }
 
   type DeleteTaskResult {

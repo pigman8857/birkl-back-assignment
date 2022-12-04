@@ -21,18 +21,18 @@ describe('Test List service mutation', () => {
     const _parent = {}
     const input = {
       listName: 'fakeListName',
-      tasks: [
-        {
-          title: 'fakeTitle',
-          status: 'fakeStatus',
-        },
-      ],
+      // tasks: [
+      //   {
+      //     title: 'fakeTitle',
+      //     status: 'fakeStatus',
+      //   },
+      // ],
     }
 
     const expectingTaskCreate = [
       {
         title: 'fakeTitle',
-        status: 'fakeStatus',
+        // status: 'fakeStatus',
         position: 0,
       },
     ]
@@ -48,11 +48,11 @@ describe('Test List service mutation', () => {
       expect(context.prisma.list.create).toBeCalledWith({
         data: {
           listName: input.listName,
-          tasks: {
-            create: expectingTaskCreate,
-          },
+          // tasks: {
+          //   create: expectingTaskCreate,
+          // },
         },
-        include: { tasks: true },
+        //include: { tasks: true },
       })
     })
   })
@@ -62,7 +62,7 @@ describe('Test List service mutation', () => {
     const taskId = 1
     const input = {
       title: 'updatedFakeTitle',
-      status: 'updatedStatus',
+      status: 'TO_DO',
     }
     const updatedTask = {
       id: taskId,
@@ -98,7 +98,7 @@ describe('Test List service mutation', () => {
   describe('Test createTask', () => {
     const createResult = {
       id: 1,
-      status: 'to-do',
+      status: 'TO_DO',
       title: 'fakeTitle',
       list: {
         listName: 'fakeListName',
@@ -118,7 +118,7 @@ describe('Test List service mutation', () => {
     const _parent = {}
     const input = {
       title: 'fakeTitle',
-      status: 'to-do',
+      status: 'TO_DO',
       listId: 'fakeListId',
     }
 
@@ -152,7 +152,7 @@ describe('Test List service mutation', () => {
         id: 2,
         listId: 'fakeListId',
         position: 0,
-        status: 'in progress',
+        status: 'TO_DO',
         title: 'title@#2',
       },
     ]
@@ -160,7 +160,7 @@ describe('Test List service mutation', () => {
       {
         id: 1,
         title: 'title@#1',
-        status: 'in progress',
+        status: 'TO_DO',
         listId: 'fakeListId',
         position: 0,
       },
@@ -168,7 +168,7 @@ describe('Test List service mutation', () => {
         {
           id: 2,
           title: 'title@#2',
-          status: 'in progress',
+          status: 'TO_DO',
           listId: 'fakeListId',
           position: 1,
         },
@@ -203,7 +203,7 @@ describe('Test List service mutation', () => {
           {
             id: 2,
             title: 'title@#2',
-            status: 'in progress',
+            status: 'TO_DO',
             listId: 'fakeListId',
             position: 0,
           },
@@ -271,31 +271,31 @@ describe('Test List service mutation', () => {
       {
         id: 1,
         title: 'fakeTitle1',
-        status: 'in-progress',
+        status: 'IN_PROGRESS',
         position: 0,
       },
       {
         id: 2,
         title: 'fakeTitle2',
-        status: 'in-progress',
+        status: 'IN_PROGRESS',
         position: 1,
       },
       {
         id: 3,
         title: 'fakeTitle3',
-        status: 'in-progress',
+        status: 'IN_PROGRESS',
         position: 2,
       },
       {
         id: 4,
         title: 'fakeTitle4',
-        status: 'in-progress',
+        status: 'IN_PROGRESS',
         position: 3,
       },
       {
         id: 5,
         title: 'fakeTitle5',
-        status: 'in-progress',
+        status: 'IN_PROGRESS',
         position: 4,
       },
     ]
@@ -326,31 +326,31 @@ describe('Test List service mutation', () => {
         {
           id: 1,
           title: 'fakeTitle1',
-          status: 'in-progress',
+          status: 'IN_PROGRESS',
           position: 0,
         },
         {
           id: 3,
           title: 'fakeTitle3',
-          status: 'in-progress',
+          status: 'IN_PROGRESS',
           position: 1,
         },
         {
           id: 2,
           title: 'fakeTitle2',
-          status: 'in-progress',
+          status: 'IN_PROGRESS',
           position: 2,
         },
         {
           id: 4,
           title: 'fakeTitle4',
-          status: 'in-progress',
+          status: 'IN_PROGRESS',
           position: 3,
         },
         {
           id: 5,
           title: 'fakeTitle5',
-          status: 'in-progress',
+          status: 'IN_PROGRESS',
           position: 4,
         },
       ]
@@ -360,7 +360,7 @@ describe('Test List service mutation', () => {
           {
             id: 2,
             title: 'fakeTitle3',
-            status: 'in-progress',
+            status: 'IN_PROGRESS',
             position: 1,
           },
           findManyTasks,
@@ -401,7 +401,7 @@ describe('Test List service mutation', () => {
       expect(context.prisma.task.update).toHaveBeenNthCalledWith(1, {
         data: {
           title: 'fakeTitle1',
-          status: 'in-progress',
+          status: 'IN_PROGRESS',
           position: 0,
         },
         where: { id: 1 },
@@ -409,7 +409,7 @@ describe('Test List service mutation', () => {
       expect(context.prisma.task.update).toHaveBeenNthCalledWith(2, {
         data: {
           title: 'fakeTitle3',
-          status: 'in-progress',
+          status: 'IN_PROGRESS',
           position: 1,
         },
         where: { id: 3 },
@@ -417,7 +417,7 @@ describe('Test List service mutation', () => {
       expect(context.prisma.task.update).toHaveBeenNthCalledWith(3, {
         data: {
           title: 'fakeTitle2',
-          status: 'in-progress',
+          status: 'IN_PROGRESS',
           position: 2,
         },
         where: { id: 2 },
@@ -425,7 +425,7 @@ describe('Test List service mutation', () => {
       expect(context.prisma.task.update).toHaveBeenNthCalledWith(4, {
         data: {
           title: 'fakeTitle4',
-          status: 'in-progress',
+          status: 'IN_PROGRESS',
           position: 3,
         },
         where: { id: 4 },
@@ -433,7 +433,7 @@ describe('Test List service mutation', () => {
       expect(context.prisma.task.update).toHaveBeenNthCalledWith(5, {
         data: {
           title: 'fakeTitle5',
-          status: 'in-progress',
+          status: 'IN_PROGRESS',
           position: 4,
         },
         where: { id: 5 },

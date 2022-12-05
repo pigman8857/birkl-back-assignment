@@ -1,44 +1,82 @@
-# Brikl backend engineer assignment
+## Local development setup
 
-## Introducing the Alpha
+### Pre-requisite
 
-Alpha is the new startup company we are developing a cutting edge task management system with modern technology.
+- `node` version 14 LTS
+- `docker` version 19.03.13+
+- `docker-compose` version 1.27.4+ or `docker compose` 
+- npm, preferably pnpm
+- VSCode extensions
+  - `bierner.markdown-mermaid` and `bierner.markdown-emoji` for viewing `.md` files
 
-You will be getting involved on this! We have setting up user service to manage user in our system but we still missing our core business logic which is the task management.
+### Start development
 
-## Functionality
+1. Copy .env.example file and rename it to .env.
+2. Add new variable for list service 
+  ```
+  LIST_SERVICE_PORT=4002
+  ```
 
-### Task management
+2. Make sure you are in the project root folder and run the following command to Install dependencies.
 
-- Create a new list
-- Create a new task in a list (the task should be prepended to the list and the
-  status should indicate it has not been completed)
-- Update a task (title and status)
-- Delete a task or list
-- Move a task to a specific position in the list
-- Retrieve all lists and their tasks
+  ```
+  npm run install
+  ```
 
-## Getting start
+3. Run docker compose to start docker containers in background.
 
-- [Prerequisites](#prerequisites)
-- [Setup](#setup)
+  ```
+  docker compose up -d
+  ```
+  or
+  ```
+  docker-compose up -d
+  ```
 
-### Prerequisites
+4. Make sure Postgres is up and ready to accept connection
 
-Make sure you have these tools installed
+  ```
+  docker logs -f list-service-db
+  ```
 
-- Docker
-- Node.js
-- Node package manager, preferably `pnpm`
+5. Initiate database.
 
-### Setup
+  ```
+  pnpm db:migrate
+  ```
+  or
+  ```
+  npm run db:migrate
+  ```
+6. Generate TypeScript definition for GraphQL and Prisma client.
 
-This is the instruction to setup this project and run in your local machine. Note that this instruction uses `pnpm` as a package manager. You may replace these commands corresponding to your package manager.
+  ```
+  pnpm codegen
+  ```
+  or
+  ```
+  npm run codegen
+  ```
 
-1. Copy `.env.example` file and rename it to `.env`.
-2. Install dependencies.
-3. Run `docker compose up -d` to start docker containers in background.
-4. Run `pnpm db:migrate` to initiate database.
-5. Run `pnpm codegen` to generate TypeScript definition for GraphQL and Prisma client.
-6. Run `pnpm start` to start the project.
-7. Go to `http://localhost:4000`, you should see Apollo Playground with two queries `users` and `user`. You may change the port according to `GATEWAY_PORT` in your `.env` file.
+7. Start the project in local.
+  ```
+  `pnpm start` 
+  ```
+  or
+  ```
+  npm run start
+  ```
+#### Unit Test 
+
+  To see coverage percentage
+  ```
+  npm run test:ci
+  ```
+  To see test the code
+  ```
+  npm run test
+  ```
+
+- See more scripts in `./package.json`
+
+<br/>

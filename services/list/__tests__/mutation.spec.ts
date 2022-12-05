@@ -2,7 +2,7 @@ import { List } from 'generated/types'
 import { resolvers } from '../resolvers/index'
 import { Context } from '../../../libs/context'
 import * as Helper from '../resolvers/helper'
-const { fn, spyOn, clearAllMocks} = jest
+const { fn, spyOn, clearAllMocks } = jest
 
 describe('Test List service mutation', () => {
   describe('Test createList', () => {
@@ -90,7 +90,7 @@ describe('Test List service mutation', () => {
       expect(context.prisma.task.update).toBeCalledWith({
         where: { id: taskId },
         data: { ...input },
-        include: { list: true },
+        include: { list: { include: { tasks: true } } },
       })
     })
   })
@@ -138,7 +138,7 @@ describe('Test List service mutation', () => {
       expect(context.prisma.task.count).toBeCalledTimes(1)
       expect(context.prisma.task.create).toBeCalledWith({
         data: createCallWith,
-        include: { list: true },
+        include: { list: { include: { tasks: true } } },
       })
       expect(context.prisma.task.count).toBeCalledWith({
         where: { listId: 'fakeListId' },
@@ -318,7 +318,7 @@ describe('Test List service mutation', () => {
     const changeTaskPosition = resolvers.Mutation?.changeTaskPosition
 
     afterAll(() => {
-      clearAllMocks();
+      clearAllMocks()
     })
 
     it('Can change position and update', async () => {
@@ -439,9 +439,19 @@ describe('Test List service mutation', () => {
         where: { id: 5 },
       })
 
-      expect(context.prisma.$transaction).toHaveBeenCalledTimes(2);
-      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(1,[undefined,undefined]);
-      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(2,[undefined,undefined,undefined,undefined,undefined,undefined]);
+      expect(context.prisma.$transaction).toHaveBeenCalledTimes(2)
+      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(1, [
+        undefined,
+        undefined,
+      ])
+      expect(context.prisma.$transaction).toHaveBeenNthCalledWith(2, [
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+      ])
     })
 
     it('Can change task id = 2 to new position 3', async () => {
@@ -450,15 +460,14 @@ describe('Test List service mutation', () => {
         taskId: 2,
         listId: 'fakeListId',
       }
-      spyOn(context.prisma, '$transaction')
-      .mockResolvedValueOnce([
+      spyOn(context.prisma, '$transaction').mockResolvedValueOnce([
         undefined,
         findManyTasks,
       ])
       await expect(
         //@ts-ignore
         changeTaskPosition(_parent, input, context)
-      ).rejects.toThrow(new Error("Entry with task Id 2 does not exist"))
+      ).rejects.toThrow(new Error('Entry with task Id 2 does not exist'))
     })
   })
 })

@@ -34,7 +34,7 @@ export const mutation: Resolvers<Context>['Mutation'] = {
     return ctx.prisma.task.update({
       where: { id: taskId },
       data: { status: __status, title },
-      include: { list: true },
+      include: { list: { include : { tasks : true}} },
     })
   },
   createTask: async (_parent, { input }, ctx) => {
@@ -43,10 +43,11 @@ export const mutation: Resolvers<Context>['Mutation'] = {
     const count = await ctx.prisma.task.count({ where: { listId } })
     return ctx.prisma.task.create({
       data: { title, listId, status: TaskStatus.TO_DO, position: count },
-      include: { list: true },
+      include: { list: { include : { tasks : true }} },
     })
   },
   deleteTask: async (_parent, { taskId, listId }, ctx) => {
+
     const [__, remainingTasks] = await ctx.prisma.$transaction([
       ctx.prisma.task.delete({ where: { id: taskId } }),
       ctx.prisma.task.findMany({
@@ -54,6 +55,7 @@ export const mutation: Resolvers<Context>['Mutation'] = {
         orderBy: { position: 'asc' },
       }),
     ])
+
     let position = 0
     const chaNgeTasksPositionOps = remainingTasks.map(task => {
       return ctx.prisma.task.update({

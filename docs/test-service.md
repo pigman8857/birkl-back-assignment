@@ -387,3 +387,89 @@ Response data is the list of tasks that are repositioned.
 }
 
 ```
+
+#### Retrieve a list
+
+GQL Operation
+```
+query Query($listId: ID!) {
+  list(id: $listId) {
+    id
+    listName
+    tasks {
+      id,
+      position,
+      status,
+      title
+    }
+  }
+}
+```
+
+JSON 
+```
+{
+  "listId": "listId"
+}
+```
+
+Response
+
+```
+{
+  "data": {
+    "list": {
+      "id": "listId",
+      "listName": "list name",
+      "tasks": [
+        {
+          "id": 6,
+          "position": 0,
+          "status": "TO_DO",
+          "title": "title #6"
+        },
+        {
+          "id": 4,
+          "position": 1,
+          "status": "TO_DO",
+          "title": "Title #4"
+        },
+        ...
+      ]
+    }
+  }
+}
+
+```
+
+#### Retrived All List
+
+GQl Operation
+
+```
+query Lists {
+  lists {
+    id,
+    listName,
+  }
+}
+```
+
+Response
+```
+{
+  "data": {
+    "lists": [
+      {
+        "id": "3068802c-a32f-4806-8305-041b57cfeb8c",
+        "listName": "@List#1"
+      },
+      {
+        "id": "71974d50-09f2-4a9d-aa8f-9d1375369e52",
+        "listName": "@List#2"
+      },
+      ...
+    ]
+  }
+}
+```

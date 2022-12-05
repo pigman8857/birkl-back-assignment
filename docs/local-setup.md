@@ -66,7 +66,8 @@
   ```
   npm run start
   ```
-- Unit Test 
+#### Unit Test 
+
   To see coverage percentage
   ```
   npm run test:ci
@@ -79,20 +80,3 @@
 - See more scripts in `./package.json`
 
 <br/>
-
-## Working with List Service
-
-NoSQL Workbench currently not supports query using CQL, so `kdcro101.vscode-cassandra` VSCode plugin is required.
-
-- Install `kdcro101.vscode-cassandra` plugin
-- Open command pallete, and run `Cassandra Workbench: Generate configuration`
-- Create a local file `./.cassandraWorkbench.jsonc` containing
-
-  ```json
-  [
-    {
-      "name": "ad_service_local",
-      "contactPoints": ["127.0.0.1:9043"]
-    }
-  ]
-  ```

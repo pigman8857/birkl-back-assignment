@@ -80,3 +80,5 @@
 - See more scripts in `./package.json`
 
 <br/>
+
+Please see how to test in [test-service.md](./docs/test-service.md)

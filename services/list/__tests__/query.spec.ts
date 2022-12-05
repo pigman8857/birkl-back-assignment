@@ -10,27 +10,11 @@ describe('Test List service query', () => {
     {
       id: listId,
       listName: 'fakeListName1',
-      tasks: [
-        //@ts-ignore
-        {
-          id : 1,
-          title: 'fakeTitle1',
-          status: 'fakeStatus',
-        },
-      ],
     },
     {
-        id: 'fakeId2',
-        listName: 'fakeListName2',
-        tasks: [
-          //@ts-ignore
-          {
-            id: 2,
-            title: 'fakeTitle1',
-            status: 'fakeStatus',
-          },
-        ],
-      },
+      id: 'fakeId2',
+      listName: 'fakeListName2',
+    },
   ]
 
   const findUniqueResult = {
@@ -56,7 +40,7 @@ describe('Test List service query', () => {
   }
 
   const input = {
-    id : listId
+    id: listId,
   }
   const _parent = {}
 
@@ -64,28 +48,24 @@ describe('Test List service query', () => {
     const getList = resolvers.Query?.list
     //@ts-ignore
     await expect(getList(_parent, input, context)).resolves.toEqual(
-        findUniqueResult
+      findUniqueResult
     )
     expect(context.prisma.list.findUnique).toBeCalledWith({
-        where: { id : listId },
-        include : {
-          tasks:true
-        }
-      });
-    expect(context.prisma.list.findUnique).toHaveBeenCalledTimes(1);
-  });
-  
+      where: { id: listId },
+      include: {
+        tasks: { orderBy: { position: 'asc' } },
+      },
+    })
+    expect(context.prisma.list.findUnique).toHaveBeenCalledTimes(1)
+  })
+
   it('get lists', async () => {
     const getLists = resolvers.Query?.lists
     //@ts-ignore
     await expect(getLists(_parent, input, context)).resolves.toEqual(
-        findManyResult
+      findManyResult
     )
-    expect(context.prisma.list.findMany).toBeCalledWith({
-        include : {
-          tasks:true
-        }
-      });
-    expect(context.prisma.list.findMany).toHaveBeenCalledTimes(1);
-  });
+    expect(context.prisma.list.findMany).toBeCalledWith()
+    expect(context.prisma.list.findMany).toHaveBeenCalledTimes(1)
+  })
 })

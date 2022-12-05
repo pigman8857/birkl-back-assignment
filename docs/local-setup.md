@@ -12,6 +12,10 @@
 ### Start development
 
 1. Copy .env.example file and rename it to .env.
+2. Add new variable for list service 
+  ```
+  LIST_SERVICE_PORT=4002
+  ```
 
 2. Make sure you are in the project root folder and run the following command to Install dependencies.
 
